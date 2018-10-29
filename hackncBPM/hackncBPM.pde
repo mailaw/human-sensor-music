@@ -31,21 +31,20 @@ float inByte = 0;
 
 void setup(){ //same as arduino program
 
-  size(800, 600);    //window size, (width, height)
-  printArray(Serial.list());   //prints all available serial ports
+  size(600, 600);    //window size, (width, height)
+  // printArray(Serial.list());   //prints all available serial ports
   frameRate(3);
   
   String portName = Serial.list()[2];
   myPort = new Serial(this, portName, 9600);
   myPort.bufferUntil('\n'); 
-    
   cp5 = new ControlP5(this);
   font = createFont("calibri light bold", 20);    // custom fonts for buttons and title
   
-  cp5.printPublicMethodsFor(Chart.class);
+  //cp5.printPublicMethodsFor(Chart.class);
   myChart = cp5.addChart("pulse")
   .setPosition(50, 50)
-  .setSize(400, 200)
+  .setSize(300, 200)
   .setRange(0, 200)
   .setView(Chart.LINE) // use Chart.LINE, Chart.PIE, Chart.AREA, Chart.BAR_CENTERED
   ;
@@ -64,28 +63,15 @@ void setup(){ //same as arduino program
      .setRange(0,200)
      .setValue(128)
   ;
-  /*
-  cp5.addButton("Beat")     // name of button
-    .setPosition(100, 50)  //x and y coordinates of upper left corner of button
-    .setSize(120, 70)      //(width, height)
-    .setFont(font)
-  ;  
-  cp5.addButton("Tempo")    
-    .setPosition(100, 150)  //x and y coordinates of upper left corner of button
-    .setSize(120, 70)      //(width, height)
-    .setFont(font)
-  ;  */
-
-
 }
 
 //graphs the values of tempo
 void serialEvent(Serial myPort) {
   //get byte
   int inByte = myPort.read();
-  println("Beat:", inByte);
+  //println("Beat:", inByte);
   
-  yPos = height - inByte;
+  /*yPos = height - inByte;
   if (xPos >= width) {
     xPos = 0;
     // clear the screen by resetting the background:
@@ -93,7 +79,7 @@ void serialEvent(Serial myPort) {
   } else {
     // increment the horizontal position for the next reading:
     xPos++;
-  }
+  }*/
 }
 
 void sliderVolume(float theColor) {
@@ -110,7 +96,7 @@ void draw(){  //same as loop in arduino
   if (myPort.available() > 0){
     beatVal = myPort.read();
   }
-  //println("beat:", beatVal); //print it out in the console */
+  println("beat:", beatVal); //print it out in the console */
 
   background(sliderTicks1);
   fill(sliderValue);
@@ -126,10 +112,10 @@ void draw(){  //same as loop in arduino
   fill(0, 255, 0);               //text color (r, g, b)
   textFont(font);
   text("Human music", 80, 30);  // ("text", x coordinate, y coordinat)
-  if (beatVal < 100) {
+  if (beatVal > 15) {
     sc.playChord(pitches, 80, 4);
   }
-  else {
+  else if(beatVal == 13 ) {
     sc.playChord(pitchesII, 65, 2);
   }
 
@@ -141,5 +127,5 @@ void draw(){  //same as loop in arduino
 //this talks and sends to the arduino
 void Beat(){
   myPort.write('h');
-  print("h");
+  print('h');
 }
